@@ -23,7 +23,7 @@ To be updated as the project is implemented.
 
 ## Current Phase
 
-Phase 2 data ingestion progressed to Neo4j graph writing adapter.
+Phase 2 retrieval now reads persisted SQLite chunks.
 
 ## Environment Assumptions
 
@@ -517,3 +517,47 @@ Known issues:
 
 Next steps:
 - Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
+
+### 0011 - Query workflow uses SQLite chunks
+
+Date: 2026-06-11
+
+Goal:
+Make query-time retrieval prefer persisted SQLite chunks instead of rebuilding from sample JSON every time.
+
+Files changed:
+- app/retrieval/query_service.py: added query service helpers to load persisted chunks, build a BM25-backed workflow, and run queries.
+- app/api/routes_query.py: changed `POST /query` to use `SQLiteStore` and the query service, with sample fallback.
+- tests/test_query_service.py: added tests proving stored chunks are used and sample data is used as fallback when the store is empty.
+- README.md: documented the `/query` data-source behavior.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Query retrieval now checks `SQLiteStore.count_chunks()` and uses `SQLiteStore.list_chunks()` when chunks exist.
+- If no chunks exist, the service falls back to `data/samples/ai_papers.json`.
+- This is the first hybrid retrieval plumbing step; Qdrant search and Neo4j graph retrieval still need to be added to the query path.
+
+Commands run:
+- `python -m pytest tests/test_query_service.py -q`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `.\\.venv\\Scripts\\python -m compileall app scripts`
+- `.\\.venv\\Scripts\\python -c "from app.api.routes_query import query, QueryRequest; print(query(QueryRequest(question='What is GraphRAG?', top_k=3))['query_type'])"`
+
+Test results:
+- Query service tests: `2 passed`.
+- Full test suite: `23 passed`.
+- Compile check succeeded.
+- Query route smoke check returned `factual`.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`
+- Size if known: small SQLite demo database from earlier smoke checks, not measured
+- Should be committed: no
+
+Known issues:
+- Qdrant vector search and Neo4j graph retrieval are not yet included in the query path.
+
+Next steps:
+- Add live Qdrant search to query retrieval with graceful fallback.
+- Add Neo4j-backed graph retrieval to query retrieval with graceful fallback.

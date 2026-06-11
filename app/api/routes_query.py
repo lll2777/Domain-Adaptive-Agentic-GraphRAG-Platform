@@ -3,10 +3,9 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 from fastapi import APIRouter
 
-from app.core.chunking import chunk_document
-from app.ingestion.sample_loader import load_sample_papers
-from app.retrieval.bm25_retriever import BM25Retriever
-from app.agent.workflow import QueryWorkflow
+from app.config import get_settings
+from app.retrieval.query_service import run_query
+from app.storage.sqlite_store import SQLiteStore
 
 router = APIRouter(tags=["query"])
 
@@ -19,13 +18,11 @@ class QueryRequest(BaseModel):
 
 @router.post("/query")
 def query(request: QueryRequest) -> dict[str, object]:
-    """Run a mock-friendly local query workflow over bundled sample data."""
+    """Run the query workflow over persisted chunks, with sample fallback."""
 
-    documents = load_sample_papers()
-    chunks = [chunk for document in documents for chunk in chunk_document(document)]
-    retriever = BM25Retriever()
-    retriever.index(chunks)
-    result = QueryWorkflow(retriever=retriever).run(request.question, domain=request.domain, top_k=request.top_k)
+    settings = get_settings()
+    store = SQLiteStore(settings.sqlite_path)
+    result = run_query(request.question, store=store, domain=request.domain, top_k=request.top_k)
     return {
         "answer": result.answer,
         "query_type": result.query_type,

@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Phase 2 Neo4j graph writing adapter added; GitHub push pending due network connectivity.
+* Status: Query workflow now uses SQLite chunks with sample fallback.
 * Last updated by: Codex.
-* Last update summary: Added Neo4j HTTP transaction writer with graceful fallback and wired sample ingest to report graph entity/relation write status. Local commit exists but push is pending because github.com:443 is currently unreachable.
+* Last update summary: Added query service that prefers persisted SQLite chunks for retrieval and falls back to sample JSON when no chunks are stored.
 * Current phase: Phase 2 data ingestion.
-* Next step: Retry GitHub push when github.com:443 is reachable, then use SQLite/Qdrant/Neo4j data in hybrid retrieval and graph retrieval.
+* Next step: Add live Qdrant search and Neo4j-backed graph retrieval to the hybrid retrieval path.
 
 ## Coding Standards
 

@@ -216,6 +216,8 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/ingest/sample
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 ```
 
+`/query` 会优先使用 `data/sqlite/app.db` 中已经导入的 chunks。如果还没有运行过 `POST /ingest/sample` 或 `python scripts/ingest_sample.py`，它会自动回退到 `data/samples/ai_papers.json`，保证第一次运行也能得到答案。
+
 ## 示例问题
 
 - What is Retrieval-Augmented Generation?
