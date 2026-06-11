@@ -253,3 +253,38 @@ Known issues:
 
 Next steps:
 - Start phase 2 data persistence and retrieval plumbing.
+
+### 0005 - Phase 1 push pending
+
+Date: 2026-06-11
+
+Goal:
+Record that the phase 1 scaffold is complete locally but GitHub push is temporarily blocked by network connectivity.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to note the push is pending because github.com:443 is unreachable.
+- PROJECT_MEMORY.md: added this change log entry for the push failure state.
+
+Implementation notes:
+- Local commit `103ffae` contains the phase 1 scaffold.
+- `Test-NetConnection github.com -Port 443` failed twice with `TcpTestSucceeded : False`.
+- `git push` failed with `Failed to connect to github.com port 443 after 21088 ms`.
+- The repository is currently one commit ahead of `origin/main`.
+
+Commands run:
+- `Test-NetConnection github.com -Port 443 | Format-List ComputerName,RemoteAddress,TcpTestSucceeded`
+- `git push`
+- `Start-Sleep -Seconds 20; Test-NetConnection github.com -Port 443 | Format-List ComputerName,RemoteAddress,TcpTestSucceeded; git push`
+
+Test results:
+- Project tests still pass in `.venv`: `9 passed`.
+
+Large files or caches generated:
+- None beyond the existing `.venv` and `.cache` from the stage.
+
+Known issues:
+- GitHub connectivity is temporarily unavailable from this machine.
+
+Next steps:
+- Retry `git push` after github.com:443 becomes reachable.
+- Begin phase 2 data persistence and retrieval plumbing.
