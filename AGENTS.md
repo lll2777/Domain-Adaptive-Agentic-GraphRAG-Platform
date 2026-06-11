@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Phase 2 started with sample-to-SQLite persistence.
+* Status: Phase 2 sample chunks persisted to SQLite.
 * Last updated by: Codex.
-* Last update summary: Added SQLite document upsert/list/count support and wired sample ingest through API and script to write `data/sqlite/app.db`.
+* Last update summary: Added SQLite chunk upsert/list/count support and wired sample ingest through API and script to write documents plus chunks to `data/sqlite/app.db`.
 * Current phase: Phase 2 data ingestion.
-* Next step: Persist sample chunks, then connect Qdrant vector indexing and Neo4j graph writing.
+* Next step: Connect Qdrant vector indexing and Neo4j graph writing.
 
 ## Coding Standards
 

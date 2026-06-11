@@ -10,7 +10,8 @@ def main() -> None:
     store = SQLiteStore(settings.sqlite_path)
     result = ingest_sample_documents(store)
     print(
-        f"Loaded {result['documents']} sample documents and wrote {result['sqlite_written']} rows to {settings.sqlite_path}."
+        f"Loaded {result['documents']} sample documents and {result['chunks']} chunks; "
+        f"wrote {result['sqlite_written']} documents and {result['sqlite_chunk_written']} chunks to {settings.sqlite_path}."
     )
 
 

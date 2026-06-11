@@ -5,7 +5,7 @@ import sqlite3
 from pathlib import Path
 from typing import Iterable
 
-from app.core.documents import Document
+from app.core.documents import Chunk, Document
 
 
 class SQLiteStore:
@@ -25,6 +25,18 @@ class SQLiteStore:
                     domain TEXT NOT NULL,
                     source TEXT NOT NULL,
                     text TEXT NOT NULL,
+                    metadata TEXT NOT NULL DEFAULT '{}'
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS chunks (
+                    chunk_id TEXT PRIMARY KEY,
+                    doc_id TEXT NOT NULL,
+                    text TEXT NOT NULL,
+                    section TEXT,
+                    page INTEGER,
                     metadata TEXT NOT NULL DEFAULT '{}'
                 )
                 """
@@ -94,3 +106,68 @@ class SQLiteStore:
                 )
             )
         return documents
+
+    def upsert_chunks(self, chunks: Iterable[Chunk]) -> int:
+        """Insert or update chunks in SQLite."""
+
+        rows = [
+            (
+                chunk.chunk_id,
+                chunk.doc_id,
+                chunk.text,
+                chunk.section,
+                chunk.page,
+                json.dumps(chunk.metadata, ensure_ascii=False),
+            )
+            for chunk in chunks
+        ]
+        if not rows:
+            return 0
+
+        self.initialize()
+        with sqlite3.connect(self.path) as conn:
+            conn.executemany(
+                """
+                INSERT INTO chunks (chunk_id, doc_id, text, section, page, metadata)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(chunk_id) DO UPDATE SET
+                    doc_id = excluded.doc_id,
+                    text = excluded.text,
+                    section = excluded.section,
+                    page = excluded.page,
+                    metadata = excluded.metadata
+                """,
+                rows,
+            )
+            conn.commit()
+        return len(rows)
+
+    def count_chunks(self) -> int:
+        """Return the number of stored chunks."""
+
+        self.initialize()
+        with sqlite3.connect(self.path) as conn:
+            row = conn.execute("SELECT COUNT(*) FROM chunks").fetchone()
+        return int(row[0] if row else 0)
+
+    def list_chunks(self) -> list[Chunk]:
+        """Read all stored chunks back into Pydantic models."""
+
+        self.initialize()
+        with sqlite3.connect(self.path) as conn:
+            rows = conn.execute(
+                "SELECT chunk_id, doc_id, text, section, page, metadata FROM chunks ORDER BY chunk_id"
+            ).fetchall()
+        chunks: list[Chunk] = []
+        for chunk_id, doc_id, text, section, page, metadata_json in rows:
+            chunks.append(
+                Chunk(
+                    chunk_id=chunk_id,
+                    doc_id=doc_id,
+                    text=text,
+                    section=section,
+                    page=page,
+                    metadata=json.loads(metadata_json or "{}"),
+                )
+            )
+        return chunks

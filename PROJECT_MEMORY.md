@@ -336,3 +336,49 @@ Next steps:
 - Persist chunks in SQLite.
 - Add Qdrant indexing with graceful fallback.
 - Add Neo4j graph writing with graceful fallback.
+
+### 0007 - Sample chunks persisted to SQLite
+
+Date: 2026-06-11
+
+Goal:
+Persist chunk records from the sample ingestion pipeline so the retrieval layer has a durable local source of truth.
+
+Files changed:
+- app/storage/sqlite_store.py: added chunk table initialization plus chunk upsert, count, and list methods.
+- app/ingestion/pipeline.py: changed sample ingestion to generate chunks and persist both documents and chunks.
+- app/api/routes_ingest.py: extended `POST /ingest/sample` response with chunk counts.
+- scripts/ingest_sample.py: updated output to report document and chunk writes.
+- tests/test_chunk_sqlite_store.py: added SQLite chunk persistence regression tests.
+- tests/test_sample_ingest_chunks.py: added end-to-end sample chunk ingestion test.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Chunk data is now written to `data/sqlite/app.db` alongside documents.
+- Chunk metadata keeps `doc_id` so later Qdrant and Neo4j linking can reuse the same IDs.
+- The sample ingest route now reports both document and chunk write counts.
+
+Commands run:
+- `python -m pytest tests/test_chunk_sqlite_store.py tests/test_sample_ingest_chunks.py -q`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `.\\.venv\\Scripts\\python -m compileall app scripts`
+- `.\\.venv\\Scripts\\python -c "from app.api.routes_ingest import ingest_sample; print(ingest_sample()['chunks'])"`
+
+Test results:
+- Targeted chunk persistence tests: `3 passed`.
+- Full test suite: `15 passed`.
+- Compile check succeeded.
+- API ingest smoke check returned `5` chunks.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`
+- Size if known: small SQLite demo database, not measured
+- Should be committed: no
+
+Known issues:
+- Qdrant and Neo4j integrations still need real persistence adapters.
+
+Next steps:
+- Add Qdrant indexing with graceful fallback.
+- Add Neo4j graph writing with graceful fallback.

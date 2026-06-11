@@ -20,6 +20,8 @@ def ingest_sample() -> dict[str, object]:
         "status": "ok",
         "documents": result["documents"],
         "sqlite_written": result["sqlite_written"],
+        "chunks": result["chunks"],
+        "sqlite_chunk_written": result["sqlite_chunk_written"],
         "message": f"Sample records stored in {settings.sqlite_path}.",
     }
 

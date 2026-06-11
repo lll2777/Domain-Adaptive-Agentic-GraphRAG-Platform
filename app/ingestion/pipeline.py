@@ -19,4 +19,11 @@ def ingest_sample_documents(store: SQLiteStore, path: Path | None = None) -> dic
 
     documents = load_sample_papers(path)
     written = store.upsert_documents(documents)
-    return {"documents": len(documents), "sqlite_written": written}
+    chunks = [chunk for document in documents for chunk in chunk_document(document)]
+    chunk_written = store.upsert_chunks(chunks)
+    return {
+        "documents": len(documents),
+        "sqlite_written": written,
+        "chunks": len(chunks),
+        "sqlite_chunk_written": chunk_written,
+    }
