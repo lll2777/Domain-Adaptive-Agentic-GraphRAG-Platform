@@ -612,3 +612,40 @@ Known issues:
 Next steps:
 - Expose richer graph context and retrieved chunk details in the UI.
 - Continue filling out evaluation and docs.
+
+### 0013 - Hybrid retrieval push pending
+
+Date: 2026-06-11
+
+Goal:
+Record that hybrid query retrieval is committed locally but could not be pushed because GitHub connectivity failed.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to note push is pending.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Local commit `86b9cdb` contains the hybrid retrieval work.
+- `git -c http.version=HTTP/1.1 push` failed with `RPC failed; curl 56 Recv failure: Connection was reset`.
+- `git ls-remote origin refs/heads/main` then failed with `Failed to connect to github.com port 443`.
+- The local branch is ahead of `origin/main`.
+
+Commands run:
+- `git -c http.version=HTTP/1.1 push`
+- `git status --short --branch`
+- `git log --oneline -5`
+- `git ls-remote origin refs/heads/main`
+
+Test results:
+- No additional tests were needed for this documentation-only push status update.
+- The hybrid retrieval work was already verified with `28 passed` before commit.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- GitHub is temporarily unreachable from this machine.
+
+Next steps:
+- Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
+- Expose richer graph context and retrieved chunk details in the UI.
