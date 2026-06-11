@@ -838,3 +838,41 @@ Known issues:
 
 Next steps:
 - Continue remaining prompt coverage review.
+
+### 0019 - Streamlit graph visualization added
+
+Date: 2026-06-11
+
+Goal:
+Add a lightweight visual graph view to the Streamlit Graph page while keeping the table-based beginner-friendly view.
+
+Files changed:
+- app/ui/view_models.py: added `build_graphviz_source` to convert graph entity/relation records into Graphviz DOT source.
+- app/ui/streamlit_app.py: wired the Graph page to render `st.graphviz_chart` when graph records are available.
+- tests/test_ui_view_models.py: added regression coverage for Graphviz source generation.
+- README.md: documented the Graph page visualization and updated the Phase 6 TODO note.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- No new heavy visualization dependency was added.
+- The page still shows entities and relations tables before the graph view, so it remains useful if the visual graph is too dense.
+
+Commands run:
+- `python -m pytest tests/test_ui_view_models.py -q`
+- `python -m compileall app scripts`
+
+Test results:
+- UI view model tests: `6 passed`.
+- Compile check succeeded.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- The graph view is intentionally lightweight and not interactive yet.
+
+Next steps:
+- Run full test suite.
+- Commit and push this graph visualization update.
+- Continue remaining prompt coverage review.

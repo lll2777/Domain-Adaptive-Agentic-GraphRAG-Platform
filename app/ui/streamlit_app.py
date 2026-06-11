@@ -17,6 +17,7 @@ from app.ui.view_models import (
     build_eval_metric_rows,
     build_eval_summary_rows,
     build_graph_rows,
+    build_graphviz_source,
     build_score_rows,
     evidence_message,
 )
@@ -86,6 +87,10 @@ elif page == "Graph":
     st.dataframe(graph["entities"])
     st.subheader("Relations")
     st.dataframe(graph["relations"])
+    graphviz_source = build_graphviz_source(graph)
+    if graphviz_source:
+        st.subheader("Graph View")
+        st.graphviz_chart(graphviz_source)
 else:
     if st.button("Run sample evaluation"):
         evaluation = run_sample_evaluation()

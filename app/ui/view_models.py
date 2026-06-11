@@ -69,3 +69,40 @@ def build_eval_metric_rows(evaluation: dict[str, object]) -> list[dict[str, obje
     if not isinstance(metrics, list):
         return []
     return [row for row in metrics if isinstance(row, dict)]
+
+
+def build_graphviz_source(graph: dict[str, list[dict[str, object]]]) -> str:
+    """Render simple Graphviz DOT source from graph records."""
+
+    entities = graph.get("entities", [])
+    relations = graph.get("relations", [])
+    if not isinstance(entities, list) or not isinstance(relations, list):
+        return ""
+
+    node_labels: dict[str, str] = {}
+    for entity in entities:
+        if not isinstance(entity, dict):
+            continue
+        entity_id = str(entity.get("entity_id", "")).strip()
+        name = str(entity.get("name", "")).strip()
+        if entity_id and name:
+            node_labels[entity_id] = name
+
+    if not node_labels:
+        return ""
+
+    lines = ["digraph G {", '  rankdir="LR";', '  node [shape="box"];']
+    for entity_id, name in node_labels.items():
+        lines.append(f'  "{entity_id}" [label="{name}"];')
+
+    for relation in relations:
+        if not isinstance(relation, dict):
+            continue
+        source = str(relation.get("source_entity", "")).strip()
+        target = str(relation.get("target_entity", "")).strip()
+        relation_type = str(relation.get("relation_type", "")).strip()
+        if source in node_labels and target in node_labels and relation_type:
+            lines.append(f'  "{source}" -> "{target}" [label="{relation_type}"];')
+
+    lines.append("}")
+    return "\n".join(lines)

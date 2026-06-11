@@ -5,6 +5,7 @@ from app.ui.view_models import (
     build_eval_metric_rows,
     build_eval_summary_rows,
     build_graph_rows,
+    build_graphviz_source,
     build_score_rows,
     evidence_message,
 )
@@ -118,3 +119,26 @@ def test_eval_rows_flatten_summary_and_metrics() -> None:
 
     assert build_eval_summary_rows(evaluation)[0] == {"metric": "questions", "value": 2}
     assert build_eval_metric_rows(evaluation)[0]["question"] == "What is RAG?"
+
+
+def test_build_graphviz_source_renders_entities_and_relations() -> None:
+    graph = {
+        "entities": [
+            {"entity_id": "paper-1", "name": "GraphRAG", "type": "Paper"},
+            {"entity_id": "method-1", "name": "Graph Retrieval", "type": "Method"},
+        ],
+        "relations": [
+            {
+                "source_entity": "paper-1",
+                "target_entity": "method-1",
+                "relation_type": "PROPOSES",
+                "evidence_chunk_id": "chunk-1",
+            }
+        ],
+    }
+
+    source = build_graphviz_source(graph)
+
+    assert "GraphRAG" in source
+    assert "Graph Retrieval" in source
+    assert "PROPOSES" in source

@@ -181,6 +181,8 @@ streamlit run app/ui/streamlit_app.py
 
 Streamlit 的 Ask 页面会调用同一条 hybrid query path，展示答案、query type、evidence 状态、citations、BM25/Qdrant/graph source scores、retrieved chunks 和 graph context。如果 Qdrant 或 Neo4j 没启动，对应分数会降级为 0 或空 graph context，基础问答仍可运行。
 
+Graph 页面会同时展示 entities、relations 表格和一个轻量 Graphviz 图谱视图，方便快速检查样例论文抽取出的知识图谱结构。
+
 ## 导入示例数据命令
 
 当前脚本会把 sample documents 和 chunks 写入 SQLite，并尝试把 chunks 写入 Qdrant、把 rule-based entities/relations 写入 Neo4j。如果 Qdrant 或 Neo4j 没启动，脚本会报告 `unavailable`，SQLite 写入仍然成功。
@@ -268,7 +270,7 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 - Phase 3: real hybrid retrieval with Qdrant vector search and graph retrieval.
 - Phase 4: query rewrite retry and stronger planner.
 - Phase 5: richer FastAPI schemas and service lifecycle.
-- Phase 6: richer Streamlit graph visualization.
+- Phase 6: graph page now includes table views plus a lightweight Graphviz visualization; future work can add interactive filtering.
 - Add OpenAI-compatible LLM client.
 - Add sentence-transformers embedding with hashing fallback.
 - Add RAGAS/DeepEval adapters.

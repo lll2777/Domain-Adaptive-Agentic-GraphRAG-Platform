@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Evaluation dashboard update is synced to GitHub.
+* Status: Streamlit Graph page now includes a lightweight Graphviz visualization.
 * Last updated by: Codex.
-* Last update summary: Updated sample evaluation to reuse one hybrid retriever/workflow, added average metric summary output, cached unavailable Qdrant/Neo4j search attempts per retriever instance, and replaced raw Streamlit evaluation JSON with summary/per-question tables. The evaluation dashboard change is now pushed to GitHub.
+* Last update summary: Added a tested Streamlit view-model helper that renders graph records as Graphviz DOT and wired it into the Graph page alongside the existing entities/relations tables.
 * Current phase: Phase 6 Streamlit UI and evaluation polish.
-* Next step: Continue remaining prompt coverage review.
+* Next step: Run full verification, commit, push, then continue remaining prompt coverage review.
 
 ## Coding Standards
 
