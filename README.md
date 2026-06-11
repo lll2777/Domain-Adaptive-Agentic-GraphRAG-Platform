@@ -181,10 +181,16 @@ streamlit run app/ui/streamlit_app.py
 
 ## 导入示例数据命令
 
-第一阶段脚本只验证 sample loader，第二阶段会写入 SQLite/Qdrant/Neo4j。
+当前脚本会把 sample documents 写入 SQLite。Qdrant 和 Neo4j 写入会在后续第二阶段继续补齐。
 
 ```powershell
 python scripts/ingest_sample.py
+```
+
+默认 SQLite 路径：
+
+```text
+D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db
 ```
 
 示例数据位于 `data/samples/ai_papers.json`。这些记录是 clearly synthetic demo records，`metadata.is_synthetic=true`，只用于演示系统流程。真实论文 metadata 可通过 arXiv loader 获取，默认不会下载 PDF。
@@ -197,6 +203,8 @@ Invoke-RestMethod -Method Get -Uri http://127.0.0.1:8000/
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/query `
   -ContentType "application/json" `
   -Body '{"question":"What is Retrieval-Augmented Generation?","domain":"ai_paper","top_k":5}'
+
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/ingest/sample
 
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 ```

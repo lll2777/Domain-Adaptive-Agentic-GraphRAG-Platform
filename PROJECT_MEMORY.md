@@ -23,7 +23,7 @@ To be updated as the project is implemented.
 
 ## Current Phase
 
-Phase 1 runnable scaffold complete.
+Phase 2 data ingestion started.
 
 ## Environment Assumptions
 
@@ -288,3 +288,51 @@ Known issues:
 Next steps:
 - Retry `git push` after github.com:443 becomes reachable.
 - Begin phase 2 data persistence and retrieval plumbing.
+
+### 0006 - Sample documents persisted to SQLite
+
+Date: 2026-06-11
+
+Goal:
+Start phase 2 by making sample ingestion persist documents to SQLite under the D-drive project data directory.
+
+Files changed:
+- app/storage/sqlite_store.py: added document upsert, count, and list methods with JSON metadata storage.
+- app/ingestion/pipeline.py: added `ingest_sample_documents` to load bundled samples and persist them through `SQLiteStore`.
+- app/api/routes_ingest.py: changed `POST /ingest/sample` to write sample documents to SQLite.
+- scripts/ingest_sample.py: changed the script to write sample documents to SQLite and report the target path.
+- tests/test_sqlite_store.py: added SQLite persistence regression tests.
+- tests/test_sample_ingest.py: added sample ingestion persistence test.
+- README.md: updated sample ingest docs and API examples.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- This step persists documents only. Chunk persistence, Qdrant vector indexing, and Neo4j graph writing remain next.
+- SQLite path stays under `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`.
+- The smoke test created `data/sqlite/app.db`; this path is ignored by Git and should not be committed.
+
+Commands run:
+- `python -m pytest tests/test_sqlite_store.py tests/test_sample_ingest.py -q`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `.\\.venv\\Scripts\\python -m compileall app scripts`
+- `.\\.venv\\Scripts\\python -c "from app.api.routes_ingest import ingest_sample; print(ingest_sample()['status'])"`
+
+Test results:
+- Targeted persistence tests: `3 passed`.
+- Full test suite: `12 passed`.
+- Compile check succeeded.
+- API ingest route smoke check returned `ok`.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`
+- Size if known: small SQLite demo database, not measured
+- Should be committed: no
+
+Known issues:
+- Qdrant and Neo4j persistence are still adapter/skeleton level.
+
+Next steps:
+- Persist chunks in SQLite.
+- Add Qdrant indexing with graceful fallback.
+- Add Neo4j graph writing with graceful fallback.

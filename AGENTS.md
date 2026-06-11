@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Phase 1 runnable scaffold implemented; GitHub push pending due temporary network failure.
+* Status: Phase 2 started with sample-to-SQLite persistence.
 * Last updated by: Codex.
-* Last update summary: Added runnable scaffold, tests, README, Docker Compose, sample data, and a local `.venv` with project dependencies. Local commit exists but GitHub push is temporarily blocked by connectivity to github.com:443.
-* Current phase: Repository setup.
-* Next step: Retry GitHub push when connectivity to github.com is restored, then begin phase 2 data persistence and retrieval plumbing.
+* Last update summary: Added SQLite document upsert/list/count support and wired sample ingest through API and script to write `data/sqlite/app.db`.
+* Current phase: Phase 2 data ingestion.
+* Next step: Persist sample chunks, then connect Qdrant vector indexing and Neo4j graph writing.
 
 ## Coding Standards
 

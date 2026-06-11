@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.ingestion.sample_loader import load_sample_papers
+from app.config import get_settings
+from app.ingestion.pipeline import ingest_sample_documents
+from app.storage.sqlite_store import SQLiteStore
 
 router = APIRouter(prefix="/ingest", tags=["ingest"])
 
@@ -11,8 +13,15 @@ router = APIRouter(prefix="/ingest", tags=["ingest"])
 def ingest_sample() -> dict[str, object]:
     """Load bundled sample metadata for the first-stage demo."""
 
-    documents = load_sample_papers()
-    return {"status": "ok", "documents": len(documents), "message": "Sample records loaded in memory."}
+    settings = get_settings()
+    store = SQLiteStore(settings.sqlite_path)
+    result = ingest_sample_documents(store)
+    return {
+        "status": "ok",
+        "documents": result["documents"],
+        "sqlite_written": result["sqlite_written"],
+        "message": f"Sample records stored in {settings.sqlite_path}.",
+    }
 
 
 @router.post("/arxiv")
