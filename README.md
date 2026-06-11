@@ -181,7 +181,7 @@ streamlit run app/ui/streamlit_app.py
 
 ## 导入示例数据命令
 
-当前脚本会把 sample documents 和 chunks 写入 SQLite，并尝试把 chunks 写入 Qdrant。如果 Qdrant 没启动，脚本会报告 `Qdrant status: unavailable`，SQLite 写入仍然成功。Neo4j 写入会在后续第二阶段继续补齐。
+当前脚本会把 sample documents 和 chunks 写入 SQLite，并尝试把 chunks 写入 Qdrant、把 rule-based entities/relations 写入 Neo4j。如果 Qdrant 或 Neo4j 没启动，脚本会报告 `unavailable`，SQLite 写入仍然成功。
 
 ```powershell
 python scripts/ingest_sample.py
@@ -193,10 +193,10 @@ python scripts/ingest_sample.py
 D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db
 ```
 
-如果想让 Qdrant indexing 成功，请先运行：
+如果想让 Qdrant indexing 和 Neo4j graph writing 成功，请先运行：
 
 ```powershell
-docker compose up -d qdrant
+docker compose up -d qdrant neo4j
 python scripts/ingest_sample.py
 ```
 

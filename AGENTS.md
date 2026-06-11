@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Phase 2 Qdrant indexing adapter added.
+* Status: Phase 2 Neo4j graph writing adapter added.
 * Last updated by: Codex.
-* Last update summary: Added Qdrant REST indexing adapter with deterministic fallback embeddings and wired sample ingest to report Qdrant indexing status while preserving SQLite progress.
+* Last update summary: Added Neo4j HTTP transaction writer with graceful fallback and wired sample ingest to report graph entity/relation write status.
 * Current phase: Phase 2 data ingestion.
-* Next step: Add Neo4j graph writing with graceful fallback, then use SQLite/Qdrant data in hybrid retrieval.
+* Next step: Use SQLite/Qdrant/Neo4j data in hybrid retrieval and graph retrieval.
 
 ## Coding Standards
 

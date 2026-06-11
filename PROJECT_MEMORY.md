@@ -23,7 +23,7 @@ To be updated as the project is implemented.
 
 ## Current Phase
 
-Phase 2 data ingestion progressed to Qdrant indexing adapter.
+Phase 2 data ingestion progressed to Neo4j graph writing adapter.
 
 ## Environment Assumptions
 
@@ -433,3 +433,53 @@ Known issues:
 Next steps:
 - Add Neo4j graph writing with graceful fallback.
 - Use SQLite/Qdrant data in hybrid retrieval.
+
+### 0009 - Neo4j graph writing adapter added
+
+Date: 2026-06-11
+
+Goal:
+Add Neo4j graph writing for rule-based entities and relations while keeping sample ingestion usable when Neo4j is not running.
+
+Files changed:
+- app/graph/cypher_templates.py: changed Cypher templates to batch-merge entities and relations.
+- app/graph/neo4j_client.py: implemented Neo4j transactional HTTP writer with graceful unavailable fallback.
+- app/ingestion/pipeline.py: added optional Neo4j writer injection and graph status fields in sample ingest results.
+- app/api/routes_ingest.py: wired `POST /ingest/sample` to attempt Neo4j graph writing and report graph counts/status.
+- scripts/ingest_sample.py: added Neo4j status reporting.
+- tests/test_neo4j_client.py: added request-shape and graceful-fallback tests for Neo4j graph writing.
+- tests/test_sample_ingest_neo4j.py: added sample ingest test for Neo4j status reporting.
+- README.md: documented Neo4j graph writing behavior and how to start Neo4j with Docker Compose.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- The adapter uses Neo4j's transactional HTTP endpoint at `/db/neo4j/tx/commit`.
+- Rule-based entities and relations are built from sample documents via `build_graph_records`.
+- If Neo4j is unavailable, ingestion returns `neo4j_status = unavailable` and keeps SQLite/Qdrant progress intact.
+- The smoke check returned `unavailable` because Neo4j was not running in this environment.
+
+Commands run:
+- `python -m pytest tests/test_neo4j_client.py tests/test_sample_ingest_neo4j.py -q`
+- `python -m pytest tests/test_qdrant_retriever.py tests/test_sample_ingest_qdrant.py -q`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `.\\.venv\\Scripts\\python -m compileall app scripts`
+- `.\\.venv\\Scripts\\python -c "from app.api.routes_ingest import ingest_sample; print(ingest_sample()['neo4j_status'])"`
+
+Test results:
+- Neo4j adapter tests: `3 passed`.
+- Qdrant regression tests: `3 passed`.
+- Full test suite: `21 passed`.
+- Compile check succeeded.
+- API ingest smoke check returned `unavailable`, which is the expected graceful fallback when Neo4j is not running.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`
+- Size if known: small SQLite demo database, not measured
+- Should be committed: no
+
+Known issues:
+- Neo4j service was not running during smoke check, so graph writing was verified with unit tests and graceful-fallback smoke check only.
+
+Next steps:
+- Use SQLite/Qdrant/Neo4j data in hybrid retrieval and graph retrieval.
