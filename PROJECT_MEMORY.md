@@ -117,3 +117,40 @@ GitHub push:
 Next steps:
 - Configure GitHub remote if missing.
 - Start project scaffold.
+
+### 0002 - Configure GitHub remote
+
+Date: 2026-06-11
+
+Goal:
+Connect the local repository to the user's GitHub repository and prepare for pushing the initialized project memory.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to record the GitHub remote configuration.
+- PROJECT_MEMORY.md: added this change log entry for remote setup.
+
+Implementation notes:
+- Configured `origin` as `https://github.com/lll2777/Domain-Adaptive-Agentic-GraphRAG-Platform.git`.
+- No secrets, tokens, API keys, passwords, or private keys were written to repository files.
+
+Commands run:
+- `git status --short --branch`
+- `git remote -v`
+- `git branch --show-current`
+- `git remote add origin https://github.com/lll2777/Domain-Adaptive-Agentic-GraphRAG-Platform.git`
+- `git remote -v`
+
+Test results:
+- Not applicable. This was a repository configuration and documentation update.
+
+Large files or caches generated:
+- Path: None
+- Size if known: 0
+- Should be committed: no
+
+Known issues:
+- Push result still needs to be verified after committing this memory update.
+
+Next steps:
+- Commit the remote setup memory update.
+- Push `main` to GitHub with `git push -u origin main`.
