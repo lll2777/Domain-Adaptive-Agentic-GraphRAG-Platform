@@ -191,6 +191,12 @@ Graph 页面会同时展示 entities、relations 表格和一个轻量 Graphviz 
 python scripts/ingest_sample.py
 ```
 
+```powershell
+python scripts/ingest_arxiv.py
+```
+
+这个命令只抓 arXiv metadata 和 abstract，不下载 PDF。
+
 默认 SQLite 路径：
 
 ```text
@@ -216,6 +222,10 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/query `
   -Body '{"question":"What is Retrieval-Augmented Generation?","domain":"ai_paper","top_k":5}'
 
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/ingest/sample
+
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/ingest/arxiv `
+  -ContentType "application/json" `
+  -Body '{"keyword":"Retrieval-Augmented Generation","categories":["cs.AI","cs.IR"],"max_results":5}'
 
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 ```

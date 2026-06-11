@@ -876,3 +876,46 @@ Next steps:
 - Run full test suite.
 - Commit and push this graph visualization update.
 - Continue remaining prompt coverage review.
+
+### 0020 - arXiv ingest pipeline activated
+
+Date: 2026-06-11
+
+Goal:
+Replace the placeholder arXiv ingest route with a real metadata ingestion pipeline that persists records and continues through downstream adapters.
+
+Files changed:
+- app/ingestion/pipeline.py: added `ingest_arxiv_records` and arXiv record-to-document mapping.
+- app/api/routes_ingest.py: replaced the arXiv placeholder with a real POST body route that fetches arXiv metadata and persists it; returns clear error messages on fetch failure.
+- scripts/ingest_arxiv.py: switched the script to the same persisted ingestion flow and added clear fetch failure handling.
+- tests/test_arxiv_ingest.py: added regression coverage for arXiv metadata persistence into SQLite.
+- README.md: documented the arXiv ingest script and API usage, and clarified that no PDFs are downloaded.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- arXiv records are mapped into the shared `Document` model with `source="arxiv"` and `domain="ai_paper"`.
+- The ingest pipeline writes SQLite first, then continues to Qdrant indexing and Neo4j graph writing through the same adapters used by sample ingest.
+- arXiv fetch failures now return a clear `status: error` response in the API and a clear console message in the script.
+
+Commands run:
+- `python -m pytest tests/test_arxiv_ingest.py -q`
+- `python -m pytest tests/test_sample_ingest.py tests/test_sample_ingest_chunks.py tests/test_sample_ingest_qdrant.py tests/test_sample_ingest_neo4j.py -q`
+- `python -m pytest tests -q`
+- `python -m compileall app scripts`
+
+Test results:
+- arXiv ingest test: `1 passed`.
+- Existing sample ingest regression tests: `4 passed`.
+- Full suite: `38 passed`.
+- Compile check succeeded.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- arXiv fetch still depends on external network availability, so live fetches can return a graceful error if the service is unreachable.
+
+Next steps:
+- Commit and push the arXiv ingest update.
+- Continue remaining prompt coverage review.

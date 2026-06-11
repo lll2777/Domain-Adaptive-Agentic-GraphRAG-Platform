@@ -75,10 +75,10 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Streamlit Graph page now includes a lightweight Graphviz visualization.
+* Status: arXiv ingest now persists metadata through SQLite, Qdrant, and Neo4j adapters.
 * Last updated by: Codex.
-* Last update summary: Added a tested Streamlit view-model helper that renders graph records as Graphviz DOT and wired it into the Graph page alongside the existing entities/relations tables.
-* Current phase: Phase 6 Streamlit UI and evaluation polish.
+* Last update summary: Added an arXiv ingest pipeline that maps fetched metadata into Documents, writes SQLite records, and continues through Qdrant/Neo4j adapters. The `POST /ingest/arxiv` path now returns clear fetch errors instead of a placeholder.
+* Current phase: Phase 2 data ingestion.
 * Next step: Run full verification, commit, push, then continue remaining prompt coverage review.
 
 ## Coding Standards
