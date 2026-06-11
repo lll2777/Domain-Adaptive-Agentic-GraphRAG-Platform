@@ -36,6 +36,7 @@ class QdrantRetriever:
         self.dimensions = dimensions
         self.session = session or requests.Session()
         self.timeout = timeout
+        self._unavailable = False
 
     def index_chunks(self, chunks: list[Chunk]) -> dict[str, object]:
         """Create a Qdrant collection and upsert chunk vectors.
@@ -61,6 +62,9 @@ class QdrantRetriever:
             return {"status": "unavailable", "indexed": 0, "message": f"Qdrant unavailable: {exc}"}
 
     def search(self, query: str, top_k: int = 5, domain: str | None = None) -> list[RetrievalResult]:
+        if self._unavailable:
+            return []
+
         payload: dict[str, object] = {
             "vector": self.embedding_model.embed(query),
             "limit": top_k,
@@ -107,6 +111,7 @@ class QdrantRetriever:
                 )
             return results[:top_k]
         except requests.RequestException as exc:
+            self._unavailable = True
             logger.info("Qdrant search unavailable: %s", exc)
             return []
 

@@ -12,7 +12,14 @@ from app.ingestion.sample_loader import load_sample_papers
 from app.retrieval.qdrant_retriever import QdrantRetriever
 from app.retrieval.query_service import run_query
 from app.storage.sqlite_store import SQLiteStore
-from app.ui.view_models import build_chunk_rows, build_graph_rows, build_score_rows, evidence_message
+from app.ui.view_models import (
+    build_chunk_rows,
+    build_eval_metric_rows,
+    build_eval_summary_rows,
+    build_graph_rows,
+    build_score_rows,
+    evidence_message,
+)
 
 
 def _store() -> SQLiteStore:
@@ -81,4 +88,8 @@ elif page == "Graph":
     st.dataframe(graph["relations"])
 else:
     if st.button("Run sample evaluation"):
-        st.json(run_sample_evaluation())
+        evaluation = run_sample_evaluation()
+        st.subheader("Summary")
+        st.dataframe(build_eval_summary_rows(evaluation), use_container_width=True)
+        st.subheader("Per-Question Metrics")
+        st.dataframe(build_eval_metric_rows(evaluation), use_container_width=True)

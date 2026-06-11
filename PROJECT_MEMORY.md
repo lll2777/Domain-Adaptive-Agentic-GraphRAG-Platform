@@ -725,3 +725,52 @@ Known issues:
 
 Next steps:
 - Continue filling out evaluation quality reporting and docs.
+
+### 0016 - Evaluation dashboard uses hybrid retrieval
+
+Date: 2026-06-11
+
+Goal:
+Make sample evaluation reflect the current retrieval pipeline and present the results more clearly in Streamlit.
+
+Files changed:
+- app/evaluation/evaluator.py: switched sample evaluation to a reused hybrid retriever/workflow, added per-question query metadata/source scores, and returned a summary with average proxy metrics.
+- app/retrieval/qdrant_retriever.py: cached unavailable search state per retriever instance to avoid repeated offline waits.
+- app/retrieval/graph_retriever.py: cached unavailable graph search state per retriever instance to avoid repeated offline waits.
+- app/ui/view_models.py: added evaluation summary and per-question metric table helpers.
+- app/ui/streamlit_app.py: changed Evaluation page from raw JSON to summary and per-question tables.
+- tests/test_evaluator.py: added evaluation output regression coverage.
+- tests/test_qdrant_search.py: added repeated-unavailable Qdrant search coverage.
+- tests/test_graph_retriever.py: added repeated-unavailable Neo4j graph search coverage.
+- tests/test_ui_view_models.py: added evaluation table helper coverage.
+- README.md: documented that evaluation now uses the hybrid query path and shows summary/per-question metrics.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Evaluation now builds one `HybridRetriever` and one `QueryWorkflow` per run instead of rebuilding them for every question.
+- If Qdrant or Neo4j are offline, the first failed search marks that retriever instance unavailable so the remaining evaluation questions do not wait on repeated connection attempts.
+- The API response shape still keeps `metrics` and now adds `summary`.
+
+Commands run:
+- `python -m pytest tests/test_evaluator.py -q`
+- `python -m pytest tests/test_qdrant_search.py tests/test_graph_retriever.py -q`
+- `python -m pytest tests/test_ui_view_models.py -q`
+
+Test results:
+- Initial evaluator test failed as expected before implementation because `summary` did not exist.
+- Initial repeated-unavailable retriever tests failed as expected because each search retried the offline service.
+- Evaluator test now passes in about 9 seconds instead of about 81 seconds.
+- Qdrant/Neo4j retriever tests: `6 passed`.
+- UI view model tests: `5 passed`.
+
+Large files or caches generated:
+- None from this evaluation update.
+
+Known issues:
+- Qdrant and Neo4j live services were not running during tests, so live service behavior remains covered by request-shape unit tests and graceful-fallback behavior.
+
+Next steps:
+- Run full test suite and compile check.
+- Commit and push this evaluation dashboard update.
+- Continue reviewing remaining prompt coverage.

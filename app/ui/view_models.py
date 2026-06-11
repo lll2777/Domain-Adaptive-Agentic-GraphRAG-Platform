@@ -51,3 +51,21 @@ def evidence_message(result: QueryWorkflowResult) -> str:
     if result.answer == "当前证据不足，无法可靠回答。":
         return "Evidence insufficient."
     return "Evidence sufficient."
+
+
+def build_eval_summary_rows(evaluation: dict[str, object]) -> list[dict[str, object]]:
+    """Flatten evaluation summary values into display rows."""
+
+    summary = evaluation.get("summary", {})
+    if not isinstance(summary, dict):
+        return []
+    return [{"metric": key, "value": value} for key, value in summary.items()]
+
+
+def build_eval_metric_rows(evaluation: dict[str, object]) -> list[dict[str, object]]:
+    """Return per-question evaluation rows for Streamlit tables."""
+
+    metrics = evaluation.get("metrics", [])
+    if not isinstance(metrics, list):
+        return []
+    return [row for row in metrics if isinstance(row, dict)]

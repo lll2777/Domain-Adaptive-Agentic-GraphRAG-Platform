@@ -56,7 +56,11 @@ class FakeSession:
 
 
 class FailingSession:
+    def __init__(self) -> None:
+        self.post_calls = 0
+
     def post(self, url: str, json: dict[str, object], timeout: int, auth=None) -> FakeResponse:
+        self.post_calls += 1
         raise requests.RequestException("neo4j unavailable")
 
 
@@ -77,3 +81,13 @@ def test_graph_retriever_gracefully_handles_unavailable_service() -> None:
     results = retriever.search("GraphRAG", top_k=3)
 
     assert results == []
+
+
+def test_graph_retriever_skips_repeated_requests_after_unavailable_service() -> None:
+    session = FailingSession()
+    retriever = GraphRetriever(host="localhost", port=7474, session=session)
+
+    assert retriever.search("GraphRAG", top_k=3) == []
+    assert retriever.search("GraphRAG", top_k=3) == []
+
+    assert session.post_calls == 1

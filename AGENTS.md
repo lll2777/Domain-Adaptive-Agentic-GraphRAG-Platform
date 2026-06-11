@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Streamlit Ask page exposes hybrid retrieval details and `main` is synced to GitHub.
+* Status: Evaluation now reuses hybrid retrieval and Streamlit shows evaluation tables.
 * Last updated by: Codex.
-* Last update summary: Updated the Streamlit UI to ingest samples into SQLite/Qdrant/Neo4j, query through the hybrid retrieval service, and display source scores, retrieved chunks, citations, and graph context. Pushed commits through `0780634` to GitHub successfully.
-* Current phase: Phase 2 data ingestion.
-* Next step: Continue filling out evaluation quality reporting and docs.
+* Last update summary: Updated sample evaluation to reuse one hybrid retriever/workflow, added average metric summary output, cached unavailable Qdrant/Neo4j search attempts per retriever instance, and replaced raw Streamlit evaluation JSON with summary/per-question tables.
+* Current phase: Phase 6 Streamlit UI and evaluation polish.
+* Next step: Run full verification, commit, push, then continue remaining prompt coverage review.
 
 ## Coding Standards
 

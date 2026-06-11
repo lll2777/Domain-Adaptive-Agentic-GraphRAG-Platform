@@ -232,7 +232,9 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 
 ## 评测说明
 
-第一阶段实现的是 proxy metrics，不是正式 RAGAS/DeepEval：
+当前评测入口会复用同一条 hybrid query path：SQLite chunks 优先，BM25/Qdrant/Neo4j 自动合并，外部服务不可用时 graceful fallback。Streamlit Evaluation 页面会显示 summary 平均分和 per-question metrics。
+
+第一版实现的是 proxy metrics，不是正式 RAGAS/DeepEval：
 
 - `citation_accuracy`: answer citations 中的 chunk_id 是否来自 retrieved chunks。
 - `context_precision_proxy`: retrieved chunks 包含 query keywords 的比例。

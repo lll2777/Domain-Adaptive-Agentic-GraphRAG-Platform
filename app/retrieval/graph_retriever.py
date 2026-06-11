@@ -51,8 +51,12 @@ class GraphRetriever:
         self.database = database
         self.session = session or requests.Session()
         self.timeout = timeout
+        self._unavailable = False
 
     def search(self, query: str, top_k: int = 5) -> list[GraphRetrievalResult]:
+        if self._unavailable:
+            return []
+
         terms = [term for term in tokenize(query) if len(term) > 2][:5]
         if not terms:
             return []
@@ -107,6 +111,7 @@ class GraphRetriever:
                 raise requests.RequestException(str(payload["errors"]))
             return self._parse_results(payload, terms, top_k)
         except requests.RequestException as exc:
+            self._unavailable = True
             logger.info("Neo4j graph retrieval unavailable: %s", exc)
             return []
 

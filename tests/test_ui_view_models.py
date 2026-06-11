@@ -1,6 +1,13 @@
 from app.agent.workflow import QueryWorkflowResult
 from app.core.documents import Chunk
-from app.ui.view_models import build_chunk_rows, build_graph_rows, build_score_rows, evidence_message
+from app.ui.view_models import (
+    build_chunk_rows,
+    build_eval_metric_rows,
+    build_eval_summary_rows,
+    build_graph_rows,
+    build_score_rows,
+    evidence_message,
+)
 
 
 def test_build_score_rows_formats_known_scores() -> None:
@@ -84,3 +91,30 @@ def test_evidence_message_reports_missing_evidence() -> None:
     )
 
     assert evidence_message(result) == "Evidence insufficient."
+
+
+def test_eval_rows_flatten_summary_and_metrics() -> None:
+    evaluation = {
+        "summary": {
+            "questions": 2,
+            "average_answer_relevancy_proxy": 0.4,
+            "average_context_precision_proxy": 0.5,
+            "average_citation_accuracy": 1.0,
+            "average_faithfulness_proxy": 0.75,
+        },
+        "metrics": [
+            {
+                "question": "What is RAG?",
+                "query_type": "factual",
+                "retrieved_chunks": 3,
+                "citations": 1,
+                "answer_relevancy_proxy": 0.4,
+                "context_precision_proxy": 0.5,
+                "citation_accuracy": 1.0,
+                "faithfulness_proxy": 0.75,
+            }
+        ],
+    }
+
+    assert build_eval_summary_rows(evaluation)[0] == {"metric": "questions", "value": 2}
+    assert build_eval_metric_rows(evaluation)[0]["question"] == "What is RAG?"
