@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Remaining MVP prompt gaps have been implemented locally; GitHub push pending until final attempt.
+* Status: All MVP prompt coverage items are implemented and synced to GitHub.
 * Last updated by: Codex.
-* Last update summary: Added one-time query rewrite retry, OpenAI-compatible LLM adapter, optional sentence-transformers embedding adapter with hashing fallback, RAGAS/DeepEval adapter boundaries, and repository protocols. Also updated README to mark MVP prompt coverage as complete except optional future enhancements.
+* Last update summary: Added one-time query rewrite retry, OpenAI-compatible LLM adapter, optional sentence-transformers embedding adapter with hashing fallback, RAGAS/DeepEval adapter boundaries, and repository protocols. README now marks MVP prompt coverage as complete except optional future enhancements, and commits through `23819a6` have been pushed.
 * Current phase: MVP prompt coverage completion.
-* Next step: Run full verification, commit the final coverage update, then attempt one GitHub push.
+* Next step: Optional future enhancements only, such as interactive graph filtering, PDF parsing, live RAGAS/DeepEval integrations, or LangGraph replacement.
 
 ## Coding Standards
 
