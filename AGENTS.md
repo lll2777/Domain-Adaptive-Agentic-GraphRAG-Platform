@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Phase 2 Neo4j graph writing adapter added.
+* Status: Phase 2 Neo4j graph writing adapter added; GitHub push pending due network connectivity.
 * Last updated by: Codex.
-* Last update summary: Added Neo4j HTTP transaction writer with graceful fallback and wired sample ingest to report graph entity/relation write status.
+* Last update summary: Added Neo4j HTTP transaction writer with graceful fallback and wired sample ingest to report graph entity/relation write status. Local commit exists but push is pending because github.com:443 is currently unreachable.
 * Current phase: Phase 2 data ingestion.
-* Next step: Use SQLite/Qdrant/Neo4j data in hybrid retrieval and graph retrieval.
+* Next step: Retry GitHub push when github.com:443 is reachable, then use SQLite/Qdrant/Neo4j data in hybrid retrieval and graph retrieval.
 
 ## Coding Standards
 

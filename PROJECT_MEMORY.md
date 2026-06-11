@@ -483,3 +483,37 @@ Known issues:
 
 Next steps:
 - Use SQLite/Qdrant/Neo4j data in hybrid retrieval and graph retrieval.
+
+### 0010 - Neo4j adapter push pending
+
+Date: 2026-06-11
+
+Goal:
+Record that the Neo4j adapter work is committed locally but could not be pushed because GitHub connectivity is unavailable.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to note push is pending.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Local commit `ada7519` contains the Neo4j graph writing adapter.
+- `Test-NetConnection github.com -Port 443` returned `TcpTestSucceeded : False`.
+- `git -c http.version=HTTP/1.1 push` failed with `Failed to connect to github.com port 443`.
+
+Commands run:
+- `git -c http.version=HTTP/1.1 push`
+- `Test-NetConnection github.com -Port 443 | Format-List ComputerName,RemoteAddress,TcpTestSucceeded`
+- `Start-Sleep -Seconds 20; Test-NetConnection github.com -Port 443 | Format-List ComputerName,RemoteAddress,TcpTestSucceeded; git -c http.version=HTTP/1.1 push`
+
+Test results:
+- No additional tests were needed for this documentation-only push status update.
+- The Neo4j adapter change was already verified with `21 passed` before commit.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- GitHub is temporarily unreachable from this machine.
+
+Next steps:
+- Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
