@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Query workflow now uses hybrid retrieval; GitHub push pending due network connectivity.
+* Status: Streamlit Ask page now exposes hybrid retrieval details; GitHub push pending due network connectivity.
 * Last updated by: Codex.
-* Last update summary: Added hybrid retrieval that merges BM25, Qdrant, and Neo4j results, with persisted SQLite chunks as the default data source. Local commit exists but push is pending because github.com:443 is currently unreachable.
+* Last update summary: Updated the Streamlit UI to ingest samples into SQLite/Qdrant/Neo4j, query through the hybrid retrieval service, and display source scores, retrieved chunks, citations, and graph context. Local commits exist but push is pending because github.com:443 has been unreliable/unreachable.
 * Current phase: Phase 2 data ingestion.
-* Next step: Retry GitHub push when connectivity returns, then expose richer graph context / retrieved chunk details in the UI and continue filling out evaluation and docs.
+* Next step: Commit the UI retrieval detail update, retry GitHub push when connectivity returns, then continue filling out evaluation and docs.
 
 ## Coding Standards
 

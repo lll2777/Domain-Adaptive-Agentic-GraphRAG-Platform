@@ -11,8 +11,8 @@
 ## 项目亮点
 
 - Domain-Adaptive Schema：领域实体、关系、检索器和评测指标通过 YAML 配置。
-- Hybrid Retrieval：已实现离线 BM25，并预留 Qdrant vector retriever。
-- GraphRAG：已实现 rule-based entity/relation extractor 和 Neo4j adapter skeleton。
+- Hybrid Retrieval：已实现 SQLite chunks + BM25 + Qdrant vector search + Neo4j graph retrieval 的合并检索路径。
+- GraphRAG：已实现 rule-based entity/relation extractor、Neo4j graph writer 和 graph retriever adapter。
 - Agentic Query Planning：已实现 query classifier 和 planner。
 - Evidence Verification：已实现最小证据检查。
 - Citation Checking：答案引用必须来自 retrieved chunks。
@@ -27,7 +27,7 @@
 - Vector DB: Qdrant via Docker Compose
 - Graph DB: Neo4j via Docker Compose
 - Metadata DB: SQLite first, PostgreSQL-ready repository boundary
-- Retrieval: lightweight BM25 now, Qdrant adapter next
+- Retrieval: SQLite-backed BM25, Qdrant vector search, Neo4j graph retrieval, simple reranker
 - LLM: mock mode now, OpenAI-compatible adapter planned
 - Evaluation: proxy metrics now, RAGAS/DeepEval adapter planned
 
@@ -178,6 +178,8 @@ http://127.0.0.1:8000/
 .\.venv\Scripts\activate
 streamlit run app/ui/streamlit_app.py
 ```
+
+Streamlit 的 Ask 页面会调用同一条 hybrid query path，展示答案、query type、evidence 状态、citations、BM25/Qdrant/graph source scores、retrieved chunks 和 graph context。如果 Qdrant 或 Neo4j 没启动，对应分数会降级为 0 或空 graph context，基础问答仍可运行。
 
 ## 导入示例数据命令
 

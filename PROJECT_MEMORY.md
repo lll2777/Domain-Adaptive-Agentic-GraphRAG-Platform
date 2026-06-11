@@ -649,3 +649,46 @@ Known issues:
 Next steps:
 - Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
 - Expose richer graph context and retrieved chunk details in the UI.
+
+### 0014 - Streamlit exposes hybrid retrieval details
+
+Date: 2026-06-11
+
+Goal:
+Make the beginner-facing Streamlit UI reflect the same persisted SQLite + BM25 + Qdrant + Neo4j query path used by the API.
+
+Files changed:
+- app/ui/streamlit_app.py: switched sample ingest to the persisted ingestion pipeline, switched Ask to `run_query`, added domain selection, and displayed evidence status, citations, source scores, retrieved chunks, and graph context.
+- app/ui/view_models.py: added small formatting helpers for Streamlit score, chunk, graph, and evidence display.
+- tests/test_ui_view_models.py: added regression tests for the Streamlit view model helpers.
+- README.md: documented the richer Streamlit Ask page and current hybrid retrieval stack.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- The UI now reports persisted SQLite document/chunk counts on Home when data has been imported.
+- The Ingest page writes SQLite first and then attempts Qdrant indexing and Neo4j graph writing, with graceful unavailable statuses.
+- The Ask page uses the shared query service, so UI and API behavior stay aligned.
+- Qdrant and Neo4j remain optional for local MVP use; if they are offline, UI tables still render with fallback/empty values.
+
+Commands run:
+- `python -m pytest tests/test_ui_view_models.py -q`
+- `python -m pytest tests -q`
+- `python -m compileall app scripts`
+
+Test results:
+- UI view model tests: `4 passed`.
+- Full test suite: `32 passed`.
+- Compile check succeeded.
+
+Large files or caches generated:
+- None from this UI update.
+
+Known issues:
+- Browser automation was not available in this session, so the Streamlit UI was verified by tests and import/compile checks rather than an in-app screenshot.
+- GitHub push is still pending from earlier network failures.
+
+Next steps:
+- Commit this UI update.
+- Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
+- Continue filling out evaluation quality reporting and docs.
