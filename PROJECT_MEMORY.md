@@ -807,3 +807,34 @@ Known issues:
 Next steps:
 - Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
 - Continue reviewing remaining prompt coverage.
+
+### 0018 - Evaluation dashboard sync restored
+
+Date: 2026-06-11
+
+Goal:
+Record that the evaluation dashboard push completed successfully and the repository is synced again.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to show GitHub sync is current.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- The earlier push retry succeeded and `main` is now synced to GitHub.
+- The push-status note from the previous step is now outdated and has been replaced with a synced state.
+
+Commands run:
+- `git status --short --branch`
+- `git -c http.version=HTTP/1.1 push`
+
+Test results:
+- No new tests were needed for this documentation-only sync update.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- None for GitHub sync at this checkpoint.
+
+Next steps:
+- Continue remaining prompt coverage review.
