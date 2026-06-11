@@ -692,3 +692,36 @@ Next steps:
 - Commit this UI update.
 - Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
 - Continue filling out evaluation quality reporting and docs.
+
+### 0015 - GitHub sync restored after UI update
+
+Date: 2026-06-11
+
+Goal:
+Record that the pending local commits, including hybrid retrieval and Streamlit UI details, were successfully pushed to GitHub.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to show GitHub sync is current.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- `git -c http.version=HTTP/1.1 push` succeeded.
+- GitHub `main` advanced from `a9768b9` to `0780634`.
+- Earlier GitHub connectivity failures are no longer blocking the current local branch.
+
+Commands run:
+- `git status --short --branch`
+- `git -c http.version=HTTP/1.1 push`
+
+Test results:
+- No new tests were needed for this documentation-only push status update.
+- The UI update was already verified with `32 passed` and compile checks before commit.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- None for GitHub sync at this checkpoint.
+
+Next steps:
+- Continue filling out evaluation quality reporting and docs.
