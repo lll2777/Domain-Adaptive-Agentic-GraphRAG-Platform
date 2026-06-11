@@ -4,6 +4,7 @@ from fastapi import APIRouter
 
 from app.config import get_settings
 from app.ingestion.pipeline import ingest_sample_documents
+from app.retrieval.qdrant_retriever import QdrantRetriever
 from app.storage.sqlite_store import SQLiteStore
 
 router = APIRouter(prefix="/ingest", tags=["ingest"])
@@ -15,13 +16,16 @@ def ingest_sample() -> dict[str, object]:
 
     settings = get_settings()
     store = SQLiteStore(settings.sqlite_path)
-    result = ingest_sample_documents(store)
+    qdrant = QdrantRetriever(host=settings.qdrant_host, port=settings.qdrant_port)
+    result = ingest_sample_documents(store, qdrant_indexer=qdrant)
     return {
         "status": "ok",
         "documents": result["documents"],
         "sqlite_written": result["sqlite_written"],
         "chunks": result["chunks"],
         "sqlite_chunk_written": result["sqlite_chunk_written"],
+        "qdrant_status": result["qdrant_status"],
+        "qdrant_indexed": result["qdrant_indexed"],
         "message": f"Sample records stored in {settings.sqlite_path}.",
     }
 

@@ -23,7 +23,7 @@ To be updated as the project is implemented.
 
 ## Current Phase
 
-Phase 2 data ingestion started.
+Phase 2 data ingestion progressed to Qdrant indexing adapter.
 
 ## Environment Assumptions
 
@@ -382,3 +382,54 @@ Known issues:
 Next steps:
 - Add Qdrant indexing with graceful fallback.
 - Add Neo4j graph writing with graceful fallback.
+
+### 0008 - Qdrant indexing adapter added
+
+Date: 2026-06-11
+
+Goal:
+Add a Qdrant vector indexing adapter for sample chunks while keeping ingestion usable when Qdrant is not running.
+
+Files changed:
+- app/retrieval/qdrant_retriever.py: implemented REST-based collection creation and chunk vector upsert using deterministic hashing embeddings.
+- app/ingestion/pipeline.py: added optional Qdrant indexer injection and Qdrant status fields in sample ingest results.
+- app/api/routes_ingest.py: wired `POST /ingest/sample` to attempt Qdrant indexing and report status.
+- scripts/ingest_sample.py: added Qdrant status reporting.
+- tests/test_qdrant_retriever.py: added request-shape and graceful-fallback tests for Qdrant indexing.
+- tests/test_sample_ingest_qdrant.py: added sample ingest test for Qdrant status reporting.
+- README.md: documented Qdrant indexing behavior and how to start Qdrant.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- The adapter uses Qdrant REST calls through `requests`, avoiding a new client dependency.
+- Point IDs are deterministic integers derived from chunk IDs.
+- If Qdrant is unavailable, ingestion returns `qdrant_status = unavailable` and keeps SQLite writes intact.
+- The smoke check returned `unavailable` because Qdrant was not running in this environment.
+
+Commands run:
+- `python -m pytest tests/test_qdrant_retriever.py -q`
+- `python -m pytest tests/test_sample_ingest_qdrant.py -q`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `.\\.venv\\Scripts\\python -m compileall app scripts`
+- `.\\.venv\\Scripts\\python -c "from app.api.routes_ingest import ingest_sample; print(ingest_sample()['qdrant_status'])"`
+
+Test results:
+- Qdrant adapter tests: `2 passed`.
+- Sample ingest Qdrant test: `1 passed`.
+- Full test suite: `18 passed`.
+- Compile check succeeded.
+- API ingest smoke check returned `unavailable`, which is the expected graceful fallback when Qdrant is not running.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`
+- Size if known: small SQLite demo database, not measured
+- Should be committed: no
+
+Known issues:
+- Qdrant service was not running during smoke check, so vector indexing could not be verified against a live server.
+- Neo4j graph writing still needs a persistence adapter.
+
+Next steps:
+- Add Neo4j graph writing with graceful fallback.
+- Use SQLite/Qdrant data in hybrid retrieval.

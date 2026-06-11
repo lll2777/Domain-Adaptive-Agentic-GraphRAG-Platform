@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Phase 2 sample chunks persisted to SQLite.
+* Status: Phase 2 Qdrant indexing adapter added.
 * Last updated by: Codex.
-* Last update summary: Added SQLite chunk upsert/list/count support and wired sample ingest through API and script to write documents plus chunks to `data/sqlite/app.db`.
+* Last update summary: Added Qdrant REST indexing adapter with deterministic fallback embeddings and wired sample ingest to report Qdrant indexing status while preserving SQLite progress.
 * Current phase: Phase 2 data ingestion.
-* Next step: Connect Qdrant vector indexing and Neo4j graph writing.
+* Next step: Add Neo4j graph writing with graceful fallback, then use SQLite/Qdrant data in hybrid retrieval.
 
 ## Coding Standards
 
