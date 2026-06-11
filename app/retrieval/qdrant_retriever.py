@@ -7,7 +7,7 @@ from typing import Any, Protocol
 import requests
 
 from app.core.documents import Chunk
-from app.core.embeddings import HashingEmbeddingModel
+from app.core.embeddings import build_embedding_model
 from app.retrieval.bm25_retriever import RetrievalResult
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class SupportsPut(Protocol):
 
 
 class QdrantRetriever:
-    """Qdrant adapter skeleton; first-stage app falls back gracefully if unavailable."""
+    """Qdrant adapter with deterministic embedding fallback and graceful service fallback."""
 
     def __init__(
         self,
@@ -27,12 +27,18 @@ class QdrantRetriever:
         port: int = 6333,
         collection_name: str = "graphrag_chunks",
         dimensions: int = 128,
+        embedding_provider: str = "hashing",
+        embedding_model_name: str = "sentence-transformers/all-MiniLM-L6-v2",
         session: SupportsPut | None = None,
         timeout: int = 10,
     ) -> None:
         self.base_url = f"http://{host}:{port}"
         self.collection_name = collection_name
-        self.embedding_model = HashingEmbeddingModel(dimensions=dimensions)
+        self.embedding_model = build_embedding_model(
+            provider=embedding_provider,
+            dimensions=dimensions,
+            model_name=embedding_model_name,
+        )
         self.dimensions = dimensions
         self.session = session or requests.Session()
         self.timeout = timeout

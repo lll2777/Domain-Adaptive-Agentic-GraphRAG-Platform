@@ -28,8 +28,9 @@
 - Graph DB: Neo4j via Docker Compose
 - Metadata DB: SQLite first, PostgreSQL-ready repository boundary
 - Retrieval: SQLite-backed BM25, Qdrant vector search, Neo4j graph retrieval, simple reranker
-- LLM: mock mode now, OpenAI-compatible adapter planned
-- Evaluation: proxy metrics now, RAGAS/DeepEval adapter planned
+- LLM: mock mode by default, with an OpenAI-compatible chat completions adapter available through environment variables
+- Embedding: hashing fallback by default, with an optional sentence-transformers adapter
+- Evaluation: proxy metrics now, with RAGAS/DeepEval adapter boundaries for later optional integrations
 
 ## 系统架构图
 
@@ -73,7 +74,7 @@ flowchart TD
   Classifier --> Planner[Retrieval Planner]
   Planner --> Retrieve[Retrieve Evidence]
   Retrieve --> Check{Evidence Sufficient?}
-  Check -- No --> Rewrite[Rewrite Once - Phase 4]
+  Check -- No --> Rewrite[Rewrite Once]
   Rewrite --> Retrieve
   Check -- Yes --> Generate[Generate Answer]
   Generate --> Cite[Check Citations]
@@ -255,6 +256,35 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 
 后续可替换为 RAGAS / DeepEval adapter。
 
+`app/evaluation/adapters.py` 已预留 RAGAS 和 DeepEval adapter 边界。第一版不默认安装这些重型依赖，避免小白环境一开始被额外包和 API key 卡住。
+
+## LLM 和 Embedding 配置
+
+默认配置不需要 API key：
+
+```env
+LLM_PROVIDER=mock
+EMBEDDING_PROVIDER=hashing
+```
+
+如果你要接 OpenAI-compatible 服务，可以在 `.env` 中配置：
+
+```env
+LLM_PROVIDER=openai-compatible
+LLM_BASE_URL=https://your-compatible-endpoint/v1
+LLM_API_KEY=your_api_key_from_environment_only
+LLM_MODEL=your-model-name
+```
+
+如果你要尝试 sentence-transformers embedding，可以配置：
+
+```env
+EMBEDDING_PROVIDER=sentence-transformers
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+```
+
+模型缓存仍应放在 D 盘项目目录下的 `.cache` 或 `.models`，不要放到 C 盘。
+
 ## 如何迁移到金融年报领域
 
 1. 使用 `configs/domains/financial_report.yaml`。
@@ -274,16 +304,22 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 
 构建面向多领域知识库的 Agentic GraphRAG 平台，以 AI 论文数据集作为主场景，基于可配置 Domain Schema 抽取 Paper、Method、Dataset、Metric、Task 等实体并构建 Neo4j 知识图谱。系统结合 Qdrant 向量检索、BM25 关键词检索、Graph Retrieval 与 Reranker，实现多文档问答、论文方法对比、技术演化分析和引用溯源。基于 Agentic Workflow 设计 Query Planning、Retrieval Routing、Evidence Verification 与 Citation Checking，并构建评测 Dashboard 量化 context precision、answer relevancy、citation accuracy 与 faithfulness。
 
+## MVP 覆盖状态
+
+- Phase 1: project scaffold, FastAPI, Streamlit, Docker Compose, README, `.env.example`.
+- Phase 2: sample and arXiv metadata ingest into SQLite, with Qdrant and Neo4j adapter writes.
+- Phase 3: hybrid retrieval with BM25, Qdrant search, Neo4j graph retrieval, score merge, and reranker boundary.
+- Phase 4: query classification, planning, one-time query rewrite retry, evidence verification, answer generation, and citation checking.
+- Phase 5: FastAPI health, ingest, query, graph, and evaluation routes with Pydantic request schemas where needed.
+- Phase 6: Streamlit Home/Ingest/Ask/Graph/Evaluation pages, table views, Graphviz graph view, and evaluation dashboard tables.
+- Extension boundaries: OpenAI-compatible LLM, sentence-transformers embedding fallback, RAGAS adapter, DeepEval adapter, PostgreSQL-ready repository protocols.
+
 ## 后续 TODO
 
-- Phase 2: sample/arXiv ingest persistence into SQLite, Qdrant, and Neo4j.
-- Phase 3: real hybrid retrieval with Qdrant vector search and graph retrieval.
-- Phase 4: query rewrite retry and stronger planner.
-- Phase 5: richer FastAPI schemas and service lifecycle.
-- Phase 6: graph page now includes table views plus a lightweight Graphviz visualization; future work can add interactive filtering.
-- Add OpenAI-compatible LLM client.
-- Add sentence-transformers embedding with hashing fallback.
-- Add RAGAS/DeepEval adapters.
+- Add interactive graph filtering.
+- Add real PDF parsing with explicit D-drive storage warnings.
+- Add optional live RAGAS/DeepEval integrations when dependencies and API keys are available.
+- Add optional LangGraph replacement for the lightweight workflow engine.
 
 ## 常见问题排查
 

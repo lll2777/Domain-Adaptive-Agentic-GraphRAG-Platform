@@ -954,3 +954,56 @@ Known issues:
 Next steps:
 - Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
 - Continue remaining prompt coverage review.
+
+### 0022 - Remaining MVP prompt coverage completed locally
+
+Date: 2026-06-11
+
+Goal:
+Fill the remaining explicit MVP prompt gaps before making one final push attempt.
+
+Files changed:
+- app/agent/workflow.py: added one-time query rewrite retry when the first retrieval pass has insufficient evidence.
+- app/core/llm.py: added OpenAI-compatible chat completions client and `build_llm_client` factory while keeping mock mode as the safe default.
+- app/core/embeddings.py: added optional sentence-transformers adapter and `build_embedding_model` with hashing fallback.
+- app/evaluation/adapters.py: added RAGAS and DeepEval adapter boundaries that report planned status without optional dependencies.
+- app/config.py: added embedding provider/model settings from environment variables.
+- .env.example: documented embedding provider/model settings.
+- app/retrieval/qdrant_retriever.py: wired configurable embedding model selection into Qdrant indexing/search.
+- app/retrieval/query_service.py, app/api/routes_ingest.py, app/ui/streamlit_app.py, scripts/ingest_sample.py, scripts/ingest_arxiv.py: passed embedding settings into Qdrant retrievers.
+- app/storage/repositories.py: replaced the `pass` placeholder with repository Protocol boundaries.
+- tests/test_workflow.py: added rewrite retry coverage.
+- tests/test_llm.py: added mock/OpenAI-compatible LLM coverage.
+- tests/test_embeddings.py: added sentence-transformers adapter and fallback coverage.
+- tests/test_eval_adapters.py: added RAGAS/DeepEval adapter boundary coverage.
+- README.md: replaced stale TODO/planned wording with MVP coverage status and updated LLM/embedding/evaluation guidance.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Query workflow now retries retrieval once with a retrieval-oriented rewritten query before refusing for insufficient evidence.
+- OpenAI-compatible mode still requires `LLM_BASE_URL`, `LLM_API_KEY`, and `LLM_MODEL`; no secrets are stored in code or docs.
+- sentence-transformers remains optional. If unavailable, embedding creation falls back to deterministic hashing.
+- RAGAS and DeepEval are intentionally adapter boundaries in the MVP so the project remains runnable without extra heavy dependencies.
+
+Commands run:
+- `python -m pytest tests/test_workflow.py tests/test_llm.py tests/test_embeddings.py tests/test_eval_adapters.py -q`
+- `python -m pytest tests/test_qdrant_retriever.py tests/test_qdrant_search.py tests/test_query_service.py tests/test_arxiv_ingest.py -q`
+- `python -m pytest tests -q`
+- `python -m compileall app scripts`
+
+Test results:
+- Remaining-gap tests: `10 passed`.
+- Retrieval/query/arXiv regression tests: `8 passed`.
+- Full suite: `46 passed`.
+- Compile check succeeded.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- Live push is still pending until the final GitHub attempt.
+
+Next steps:
+- Commit all remaining coverage changes.
+- Attempt one final `git -c http.version=HTTP/1.1 push`.

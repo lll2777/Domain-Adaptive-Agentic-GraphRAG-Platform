@@ -30,7 +30,13 @@ def _store() -> SQLiteStore:
 def _ingest_sample() -> dict[str, int | str]:
     settings = get_settings()
     store = SQLiteStore(settings.sqlite_path)
-    qdrant = QdrantRetriever(host=settings.qdrant_host, port=settings.qdrant_port, timeout=2)
+    qdrant = QdrantRetriever(
+        host=settings.qdrant_host,
+        port=settings.qdrant_port,
+        embedding_provider=settings.embedding_provider,
+        embedding_model_name=settings.embedding_model,
+        timeout=2,
+    )
     neo4j = Neo4jClient(user=settings.neo4j_user, password=settings.neo4j_password, timeout=2)
     return ingest_sample_documents(store, qdrant_indexer=qdrant, neo4j_writer=neo4j)
 

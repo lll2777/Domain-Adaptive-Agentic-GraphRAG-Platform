@@ -23,6 +23,8 @@ class Settings(BaseModel):
     llm_base_url: str = ""
     llm_api_key: str = ""
     llm_model: str = "mock"
+    embedding_provider: str = "hashing"
+    embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
 
 def get_settings() -> Settings:
@@ -43,4 +45,6 @@ def get_settings() -> Settings:
         llm_base_url=os.getenv("LLM_BASE_URL", ""),
         llm_api_key=os.getenv("LLM_API_KEY", ""),
         llm_model=os.getenv("LLM_MODEL", "mock"),
+        embedding_provider=os.getenv("EMBEDDING_PROVIDER", "hashing"),
+        embedding_model=os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"),
     )

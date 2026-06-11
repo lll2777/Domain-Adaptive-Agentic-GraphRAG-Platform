@@ -8,6 +8,7 @@ from app.agent.evidence_checker import EvidenceChecker
 from app.agent.planner import Planner
 from app.agent.query_classifier import QueryClassifier
 from app.core.documents import Chunk
+from app.retrieval.bm25_retriever import RetrievalResult
 
 
 @dataclass
@@ -44,20 +45,21 @@ class QueryWorkflow:
                 retrieved_chunks=[],
             )
 
-        try:
-            results = self.retriever.search(question, top_k=top_k, domain=domain)
-        except TypeError:
-            results = self.retriever.search(question, top_k=top_k)
+        results = self._search(question, top_k=top_k, domain=domain)
         evidence = self.evidence_checker.check(results)
         if not evidence.is_sufficient:
-            return QueryWorkflowResult(
-                answer="当前证据不足，无法可靠回答。",
-                query_type=query_type,
-                retrieval_plan=plan.notes,
-                citations=[],
-                retrieved_chunks=[],
-                scores={"evidence": evidence.message},
-            )
+            rewritten_question = self._rewrite_query(question, query_type, domain)
+            results = self._search(rewritten_question, top_k=top_k, domain=domain)
+            evidence = self.evidence_checker.check(results)
+            if not evidence.is_sufficient:
+                return QueryWorkflowResult(
+                    answer="当前证据不足，无法可靠回答。",
+                    query_type=query_type,
+                    retrieval_plan=plan.notes,
+                    citations=[],
+                    retrieved_chunks=[],
+                    scores={"evidence": evidence.message, "rewrite_attempted": 1, "rewritten_query": rewritten_question},
+                )
 
         chunks = [result.chunk for result in results]
         answer = self.answer_generator.generate(question, results)
@@ -71,5 +73,16 @@ class QueryWorkflow:
             citations=citation_result.citations if citation_result.is_valid else [],
             retrieved_chunks=chunks,
             graph_context=[],
-            scores={"top_score": results[0].score if results else 0.0},
+            scores={"top_score": results[0].score if results else 0.0, "rewrite_attempted": 1 if "rewritten_question" in locals() else 0},
         )
+
+    def _search(self, question: str, top_k: int, domain: str) -> list[RetrievalResult]:
+        try:
+            return self.retriever.search(question, top_k=top_k, domain=domain)
+        except TypeError:
+            return self.retriever.search(question, top_k=top_k)
+
+    def _rewrite_query(self, question: str, query_type: str, domain: str) -> str:
+        """Rewrite once with retrieval-oriented context when initial evidence is missing."""
+
+        return f"{question.strip()} domain {domain} {query_type} evidence keywords"

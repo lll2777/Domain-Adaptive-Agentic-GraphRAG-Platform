@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: arXiv ingest pipeline committed locally; GitHub push pending due network connectivity.
+* Status: Remaining MVP prompt gaps have been implemented locally; GitHub push pending until final attempt.
 * Last updated by: Codex.
-* Last update summary: Added an arXiv ingest pipeline that maps fetched metadata into Documents, writes SQLite records, and continues through Qdrant/Neo4j adapters. Local commit `41f2ca8` exists, but push failed because the GitHub HTTPS connection reset and then github.com:443 was unreachable.
-* Current phase: Phase 2 data ingestion.
-* Next step: Retry `git -c http.version=HTTP/1.1 push` when GitHub connectivity returns, then continue remaining prompt coverage review.
+* Last update summary: Added one-time query rewrite retry, OpenAI-compatible LLM adapter, optional sentence-transformers embedding adapter with hashing fallback, RAGAS/DeepEval adapter boundaries, and repository protocols. Also updated README to mark MVP prompt coverage as complete except optional future enhancements.
+* Current phase: MVP prompt coverage completion.
+* Next step: Run full verification, commit the final coverage update, then attempt one GitHub push.
 
 ## Coding Standards
 

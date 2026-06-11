@@ -29,7 +29,13 @@ def build_hybrid_retriever(store: SQLiteStore | None = None) -> HybridRetriever:
     bm25 = BM25Retriever()
     bm25.index(chunks)
     chunk_lookup = {chunk.chunk_id: chunk for chunk in chunks}
-    qdrant = QdrantRetriever(host=settings.qdrant_host, port=settings.qdrant_port, timeout=2)
+    qdrant = QdrantRetriever(
+        host=settings.qdrant_host,
+        port=settings.qdrant_port,
+        embedding_provider=settings.embedding_provider,
+        embedding_model_name=settings.embedding_model,
+        timeout=2,
+    )
     graph = GraphRetriever(user=settings.neo4j_user, password=settings.neo4j_password, timeout=2)
     return HybridRetriever(bm25=bm25, qdrant=qdrant, graph=graph, chunk_lookup=chunk_lookup)
 
