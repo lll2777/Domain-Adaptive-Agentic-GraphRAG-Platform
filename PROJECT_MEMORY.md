@@ -774,3 +774,36 @@ Next steps:
 - Run full test suite and compile check.
 - Commit and push this evaluation dashboard update.
 - Continue reviewing remaining prompt coverage.
+
+### 0017 - Evaluation dashboard push pending
+
+Date: 2026-06-11
+
+Goal:
+Record that the evaluation dashboard update is committed locally but could not be pushed because GitHub is unreachable from this machine.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to note push is pending.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Local commit `41c1942` contains the evaluation dashboard update.
+- `git -c http.version=HTTP/1.1 push` failed before sending because `github.com:443` could not be reached.
+- The local branch is ahead of `origin/main`.
+
+Commands run:
+- `git -c http.version=HTTP/1.1 push`
+
+Test results:
+- No new tests were needed for this documentation-only push status update.
+- The evaluation dashboard update was already verified with `36 passed` and compile checks before commit.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- GitHub is temporarily unreachable from this machine.
+
+Next steps:
+- Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
+- Continue reviewing remaining prompt coverage.
