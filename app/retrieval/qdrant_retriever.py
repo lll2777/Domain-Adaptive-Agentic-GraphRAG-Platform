@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 from typing import Any, Protocol
 
 import requests
@@ -8,6 +9,8 @@ import requests
 from app.core.documents import Chunk
 from app.core.embeddings import HashingEmbeddingModel
 from app.retrieval.bm25_retriever import RetrievalResult
+
+logger = logging.getLogger(__name__)
 
 
 class SupportsPut(Protocol):
@@ -58,7 +61,54 @@ class QdrantRetriever:
             return {"status": "unavailable", "indexed": 0, "message": f"Qdrant unavailable: {exc}"}
 
     def search(self, query: str, top_k: int = 5, domain: str | None = None) -> list[RetrievalResult]:
-        return []
+        payload: dict[str, object] = {
+            "vector": self.embedding_model.embed(query),
+            "limit": top_k,
+            "with_payload": True,
+        }
+        if domain:
+            payload["filter"] = {
+                "must": [
+                    {
+                        "key": "domain",
+                        "match": {"value": domain},
+                    }
+                ]
+            }
+
+        try:
+            response = self.session.post(
+                f"{self.base_url}/collections/{self.collection_name}/points/search",
+                json=payload,
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+            results: list[RetrievalResult] = []
+            for item in response.json().get("result", []):
+                item_payload = item.get("payload", {}) if isinstance(item, dict) else {}
+                chunk = Chunk(
+                    chunk_id=str(item_payload.get("chunk_id", item.get("id", ""))),
+                    doc_id=str(item_payload.get("doc_id", "")),
+                    text=str(item_payload.get("text", "")),
+                    section=item_payload.get("section"),
+                    page=item_payload.get("page"),
+                    metadata={
+                        key: value
+                        for key, value in item_payload.items()
+                        if key not in {"chunk_id", "doc_id", "text", "section", "page"}
+                    },
+                )
+                results.append(
+                    RetrievalResult(
+                        chunk=chunk,
+                        score=float(item.get("score", 0.0)),
+                        source="qdrant",
+                    )
+                )
+            return results[:top_k]
+        except requests.RequestException as exc:
+            logger.info("Qdrant search unavailable: %s", exc)
+            return []
 
     def _ensure_collection(self) -> None:
         response = self.session.put(

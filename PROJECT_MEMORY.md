@@ -561,3 +561,54 @@ Known issues:
 Next steps:
 - Add live Qdrant search to query retrieval with graceful fallback.
 - Add Neo4j-backed graph retrieval to query retrieval with graceful fallback.
+
+### 0012 - Hybrid retrieval now merges SQLite, Qdrant, and Neo4j
+
+Date: 2026-06-11
+
+Goal:
+Upgrade query-time retrieval to combine persisted SQLite chunks, live Qdrant search, and Neo4j graph retrieval into one hybrid path.
+
+Files changed:
+- app/retrieval/qdrant_retriever.py: implemented live Qdrant search over the REST API with graceful fallback.
+- app/retrieval/graph_retriever.py: implemented live Neo4j graph search over the transactional HTTP API with graceful fallback.
+- app/retrieval/hybrid_retriever.py: added source merging, de-duplication, simple score normalization, and graph context capture.
+- app/retrieval/query_service.py: switched query construction to the hybrid retriever and passed through graph context and source scores.
+- app/agent/workflow.py: allowed domain-aware search calls so Qdrant filters can receive the requested domain.
+- tests/test_qdrant_search.py: added Qdrant search regression tests.
+- tests/test_graph_retriever.py: added Neo4j graph retrieval regression tests.
+- tests/test_hybrid_retriever.py: added hybrid merge/deduplication tests.
+- tests/test_query_service.py: kept coverage for persisted chunk use and sample fallback.
+- README.md: clarified that `/query` now merges SQLite, Qdrant, and Neo4j with graceful degradation.
+- AGENTS.md: updated Latest Agent Checkpoint.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- `/query` now prefers persisted SQLite chunks, then merges Qdrant vector hits and Neo4j graph evidence.
+- Graph hits contribute both retrieved chunks and graph context for downstream UI and evaluation use.
+- Domain-aware search is threaded toward Qdrant so the `domain` filter can be applied when available.
+- The system still falls back to sample JSON and skip states when Qdrant or Neo4j are offline.
+
+Commands run:
+- `python -m pytest tests/test_qdrant_search.py tests/test_graph_retriever.py tests/test_hybrid_retriever.py tests/test_query_service.py -q`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `python -m compileall app scripts`
+- `.\\.venv\\Scripts\\python -c "from app.api.routes_query import query, QueryRequest; result=query(QueryRequest(question='What is GraphRAG?', top_k=3)); print(result['query_type']); print(result['scores'].keys())"`
+
+Test results:
+- New retrieval tests: `7 passed`.
+- Full test suite: `28 passed`.
+- Compile check succeeded.
+- Query smoke check returned `factual` and included `top_score`, `bm25_score`, `qdrant_score`, and `graph_score`.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\data\sqlite\app.db`
+- Size if known: small SQLite demo database, not measured
+- Should be committed: no
+
+Known issues:
+- Qdrant and Neo4j live services were not running during smoke check, so those branches were validated via unit tests and graceful-fallback behavior.
+
+Next steps:
+- Expose richer graph context and retrieved chunk details in the UI.
+- Continue filling out evaluation and docs.

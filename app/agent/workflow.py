@@ -44,7 +44,10 @@ class QueryWorkflow:
                 retrieved_chunks=[],
             )
 
-        results = self.retriever.search(question, top_k=top_k)
+        try:
+            results = self.retriever.search(question, top_k=top_k, domain=domain)
+        except TypeError:
+            results = self.retriever.search(question, top_k=top_k)
         evidence = self.evidence_checker.check(results)
         if not evidence.is_sufficient:
             return QueryWorkflowResult(

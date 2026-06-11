@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Query workflow now uses SQLite chunks with sample fallback.
+* Status: Query workflow now uses hybrid retrieval across SQLite, Qdrant, and Neo4j with sample fallback.
 * Last updated by: Codex.
-* Last update summary: Added query service that prefers persisted SQLite chunks for retrieval and falls back to sample JSON when no chunks are stored.
+* Last update summary: Added hybrid retrieval that merges BM25, Qdrant, and Neo4j results, with persisted SQLite chunks as the default data source.
 * Current phase: Phase 2 data ingestion.
-* Next step: Add live Qdrant search and Neo4j-backed graph retrieval to the hybrid retrieval path.
+* Next step: Expose richer graph context / retrieved chunk details in the UI and continue filling out evaluation and docs.
 
 ## Coding Standards
 

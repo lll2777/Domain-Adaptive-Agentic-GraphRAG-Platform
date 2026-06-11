@@ -216,7 +216,7 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/ingest/sample
 Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/eval/run
 ```
 
-`/query` 会优先使用 `data/sqlite/app.db` 中已经导入的 chunks。如果还没有运行过 `POST /ingest/sample` 或 `python scripts/ingest_sample.py`，它会自动回退到 `data/samples/ai_papers.json`，保证第一次运行也能得到答案。
+`/query` 会优先使用 `data/sqlite/app.db` 中已经导入的 chunks，并尝试合并 Qdrant 和 Neo4j 的结果。如果还没有运行过 `POST /ingest/sample` 或 `python scripts/ingest_sample.py`，它会自动回退到 `data/samples/ai_papers.json`，保证第一次运行也能得到答案。Qdrant 或 Neo4j 没启动时会自动降级，不会影响基础问答。
 
 ## 示例问题
 
