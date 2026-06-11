@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: arXiv ingest now persists metadata through SQLite, Qdrant, and Neo4j adapters.
+* Status: arXiv ingest pipeline committed locally; GitHub push pending due network connectivity.
 * Last updated by: Codex.
-* Last update summary: Added an arXiv ingest pipeline that maps fetched metadata into Documents, writes SQLite records, and continues through Qdrant/Neo4j adapters. The `POST /ingest/arxiv` path now returns clear fetch errors instead of a placeholder.
+* Last update summary: Added an arXiv ingest pipeline that maps fetched metadata into Documents, writes SQLite records, and continues through Qdrant/Neo4j adapters. Local commit `41f2ca8` exists, but push failed because the GitHub HTTPS connection reset and then github.com:443 was unreachable.
 * Current phase: Phase 2 data ingestion.
-* Next step: Run full verification, commit, push, then continue remaining prompt coverage review.
+* Next step: Retry `git -c http.version=HTTP/1.1 push` when GitHub connectivity returns, then continue remaining prompt coverage review.
 
 ## Coding Standards
 

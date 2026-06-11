@@ -919,3 +919,38 @@ Known issues:
 Next steps:
 - Commit and push the arXiv ingest update.
 - Continue remaining prompt coverage review.
+
+### 0021 - arXiv ingest push pending
+
+Date: 2026-06-11
+
+Goal:
+Record that the arXiv ingest pipeline is committed locally but could not be pushed because GitHub connectivity failed.
+
+Files changed:
+- AGENTS.md: updated Latest Agent Checkpoint to note push is pending.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Local commit `41f2ca8` contains the arXiv ingest pipeline.
+- First `git -c http.version=HTTP/1.1 push` failed with `Recv failure: Connection was reset`.
+- Second `git -c http.version=HTTP/1.1 push` failed with `Failed to connect to github.com port 443`.
+- The local branch is ahead of `origin/main`.
+
+Commands run:
+- `git -c http.version=HTTP/1.1 push`
+- `git -c http.version=HTTP/1.1 push`
+
+Test results:
+- No new tests were needed for this documentation-only push status update.
+- The arXiv ingest update was already verified with `38 passed` and compile checks before commit.
+
+Large files or caches generated:
+- None.
+
+Known issues:
+- GitHub is temporarily unreachable from this machine.
+
+Next steps:
+- Retry `git -c http.version=HTTP/1.1 push` after github.com:443 becomes reachable.
+- Continue remaining prompt coverage review.
