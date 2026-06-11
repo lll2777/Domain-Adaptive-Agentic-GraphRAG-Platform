@@ -1,0 +1,12 @@
+[
+  {"question": "What is Retrieval-Augmented Generation?"},
+  {"question": "Which papers discuss GraphRAG?"},
+  {"question": "Compare GraphRAG and standard vector-based RAG."},
+  {"question": "Which methods use knowledge graphs for retrieval?"},
+  {"question": "What datasets or benchmarks are mentioned in these papers?"},
+  {"question": "Which papers are related to agentic RAG?"},
+  {"question": "Summarize the trend from RAG to Agentic RAG."},
+  {"question": "Which methods improve retrieval quality?"},
+  {"question": "Which papers compare different retrieval strategies?"},
+  {"question": "What evidence supports the answer?"}
+]

@@ -75,11 +75,11 @@ $env:SENTENCE_TRANSFORMERS_HOME="D:\codex_project\Domain-Adaptive Agentic GraphR
 
 ## Latest Agent Checkpoint
 
-* Status: Repository initialized and pushed to GitHub.
+* Status: Phase 1 runnable scaffold implemented.
 * Last updated by: Codex.
-* Last update summary: Added GitHub remote origin `https://github.com/lll2777/Domain-Adaptive-Agentic-GraphRAG-Platform.git` and pushed local `main` to GitHub.
+* Last update summary: Added runnable scaffold, tests, README, Docker Compose, sample data, and a local `.venv` with project dependencies.
 * Current phase: Repository setup.
-* Next step: Start the project scaffold.
+* Next step: Begin phase 2 data persistence and retrieval plumbing.
 
 ## Coding Standards
 

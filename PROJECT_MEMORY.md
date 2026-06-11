@@ -23,7 +23,7 @@ To be updated as the project is implemented.
 
 ## Current Phase
 
-Repository setup.
+Phase 1 runnable scaffold complete.
 
 ## Environment Assumptions
 
@@ -194,3 +194,62 @@ Known issues:
 
 Next steps:
 - Start the project scaffold.
+
+### 0004 - Phase 1 runnable scaffold
+
+Date: 2026-06-11
+
+Goal:
+Build the first runnable scaffold for the Domain-Adaptive Agentic GraphRAG Platform.
+
+Files changed:
+- README.md: added beginner-friendly setup, Mermaid diagrams, D-drive guidance, Docker commands, API examples, evaluation explanation, migration notes, resume wording, and FAQ.
+- requirements.txt: added FastAPI, Uvicorn, Pydantic, Streamlit, PyYAML, Requests, and Pytest.
+- docker-compose.yml: added Qdrant and Neo4j services with D-drive bind mounts.
+- app/: added core models, chunking, schema loading, embeddings fallback, LLM abstraction, retrieval, agent workflow, ingestion adapters, graph helpers, evaluation helpers, API routes, Streamlit UI, and storage boundary modules.
+- configs/domains/: added ai_paper and financial_report YAML schemas.
+- data/samples/ai_papers.json: added synthetic demo records.
+- data/eval/sample_questions.json: added sample evaluation prompts.
+- scripts/: added sample ingest, arXiv ingest, evaluation, and reset helpers.
+- tests/: added chunking, schema, BM25, workflow, and citation regression tests.
+- docs/superpowers/plans/2026-06-11-phase-1-runnable-scaffold.md: added the implementation plan for this stage.
+- AGENTS.md: updated Latest Agent Checkpoint for phase 1.
+- PROJECT_MEMORY.md: added this change log entry.
+
+Implementation notes:
+- Kept the first-stage implementation mock-friendly and offline-capable.
+- BM25 is implemented locally; Qdrant and Neo4j are adapter skeletons for phase 2.
+- Query workflow supports factual/comparison/multi_hop/trend_analysis/citation_trace/out_of_domain routing.
+- Citation checking now rejects fabricated chunk IDs.
+- Synthetic sample records are clearly marked via `metadata.is_synthetic = true`.
+
+Commands run:
+- `python -m pytest tests -q`
+- `python -m compileall app scripts`
+- `python -c "from app.main import app; print(app.title)"`
+- `python -m venv .venv`
+- `.\\.venv\\Scripts\\python -m pip install --upgrade pip`
+- `.\\.venv\\Scripts\\python -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn`
+- `.\\.venv\\Scripts\\python -m pytest tests -q`
+- `.\\.venv\\Scripts\\python -c "from app.main import app; print(app.title)"`
+- `.\\.venv\\Scripts\\python -c "import streamlit, uvicorn; print(streamlit.__version__)"`
+
+Test results:
+- `9 passed` with the system Python.
+- `9 passed` with the project `.venv`.
+- `python -c "from app.main import app; print(app.title)"` succeeded in `.venv`.
+
+Large files or caches generated:
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\.venv`
+- Size if known: not measured, but expected to be sizable
+- Should be committed: no
+- Path: `D:\codex_project\Domain-Adaptive Agentic GraphRAG Platform\.cache\pip`
+- Size if known: not measured
+- Should be committed: no
+
+Known issues:
+- The first default PyPI install attempt failed with SSL EOF errors, but the mirror-based retry succeeded.
+- `.venv` and `.cache` exist only for local execution and remain ignored.
+
+Next steps:
+- Start phase 2 data persistence and retrieval plumbing.

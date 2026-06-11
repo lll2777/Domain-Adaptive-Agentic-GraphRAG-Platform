@@ -1,0 +1,62 @@
+[
+  {
+    "paper_id": "synthetic-rag-001",
+    "title": "A Synthetic Overview of Retrieval-Augmented Generation",
+    "authors": ["Demo Author A", "Demo Author B"],
+    "abstract": "Retrieval-Augmented Generation combines information retrieval with text generation so answers can be grounded in external context. This synthetic demo record mentions question answering, recall, precision, and dense retrieval.",
+    "year": 2024,
+    "categories": ["cs.CL", "cs.IR"],
+    "source_url": "https://example.com/synthetic-rag-001",
+    "pdf_url": "https://example.com/synthetic-rag-001.pdf",
+    "keywords": ["RAG", "Dense Retrieval", "question answering", "recall"],
+    "metadata": {"is_synthetic": true}
+  },
+  {
+    "paper_id": "synthetic-graphrag-002",
+    "title": "Synthetic GraphRAG for Multi-Hop Retrieval",
+    "authors": ["Demo Author C"],
+    "abstract": "GraphRAG uses graph retrieval to connect papers, methods, datasets, and metrics for multi-hop reasoning. This synthetic demo record mentions HotpotQA, faithfulness, and context precision.",
+    "year": 2024,
+    "categories": ["cs.AI", "cs.IR"],
+    "source_url": "https://example.com/synthetic-graphrag-002",
+    "pdf_url": "https://example.com/synthetic-graphrag-002.pdf",
+    "keywords": ["GraphRAG", "HotpotQA", "multi-hop reasoning", "faithfulness"],
+    "metadata": {"is_synthetic": true}
+  },
+  {
+    "paper_id": "synthetic-agentic-rag-003",
+    "title": "Synthetic Agentic RAG Query Planning",
+    "authors": ["Demo Author D"],
+    "abstract": "Agentic RAG introduces query planning, retrieval routing, evidence verification, and citation checking. The method can choose hybrid search, graph retrieval, or reranking based on the question type.",
+    "year": 2025,
+    "categories": ["cs.AI", "cs.CL"],
+    "source_url": "https://example.com/synthetic-agentic-rag-003",
+    "pdf_url": "https://example.com/synthetic-agentic-rag-003.pdf",
+    "keywords": ["Agentic RAG", "Hybrid Search", "Reranker", "citation checking"],
+    "metadata": {"is_synthetic": true}
+  },
+  {
+    "paper_id": "synthetic-hybrid-search-004",
+    "title": "Synthetic Hybrid Search for Reliable Retrieval",
+    "authors": ["Demo Author E"],
+    "abstract": "Hybrid search combines BM25 and vector search to improve retrieval quality. This synthetic record discusses information retrieval, Natural Questions, latency, and reranker interfaces.",
+    "year": 2023,
+    "categories": ["cs.IR", "cs.LG"],
+    "source_url": "https://example.com/synthetic-hybrid-search-004",
+    "pdf_url": "https://example.com/synthetic-hybrid-search-004.pdf",
+    "keywords": ["Hybrid Search", "BM25", "Natural Questions", "latency"],
+    "metadata": {"is_synthetic": true}
+  },
+  {
+    "paper_id": "synthetic-eval-005",
+    "title": "Synthetic Evaluation Metrics for Grounded RAG",
+    "authors": ["Demo Author F"],
+    "abstract": "RAG evaluation can use citation accuracy, answer relevancy, context precision, and faithfulness as proxy metrics before adopting full RAGAS or DeepEval pipelines.",
+    "year": 2025,
+    "categories": ["cs.CL", "cs.LG"],
+    "source_url": "https://example.com/synthetic-eval-005",
+    "pdf_url": "https://example.com/synthetic-eval-005.pdf",
+    "keywords": ["faithfulness", "context precision", "accuracy", "RAGAS"],
+    "metadata": {"is_synthetic": true}
+  }
+]

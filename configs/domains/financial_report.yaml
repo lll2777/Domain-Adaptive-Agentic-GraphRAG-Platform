@@ -1,0 +1,34 @@
+domain_name: financial_report
+entity_types:
+  - Company
+  - Filing
+  - BusinessSegment
+  - RiskFactor
+  - FinancialMetric
+  - Product
+  - Market
+  - Regulation
+relation_types:
+  - DISCLOSES
+  - REPORTS
+  - INCREASES
+  - DECREASES
+  - MENTIONS
+  - COMPETES_WITH
+  - DEPENDS_ON
+  - EXPOSED_TO
+metadata_fields:
+  - company
+  - filing_type
+  - fiscal_year
+  - source_url
+  - section
+default_retrievers:
+  - bm25
+  - vector
+  - graph
+evaluation_metrics:
+  - citation_accuracy
+  - context_precision_proxy
+  - answer_relevancy_proxy
+  - faithfulness_proxy

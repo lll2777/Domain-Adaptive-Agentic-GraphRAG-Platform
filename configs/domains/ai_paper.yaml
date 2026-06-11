@@ -1,0 +1,41 @@
+domain_name: ai_paper
+entity_types:
+  - Paper
+  - Author
+  - Method
+  - Dataset
+  - Metric
+  - Task
+  - Model
+  - Benchmark
+  - Institution
+relation_types:
+  - WRITTEN_BY
+  - CITES
+  - PROPOSES
+  - USES
+  - EVALUATES_ON
+  - REPORTS
+  - IMPROVES
+  - COMPARES_WITH
+  - BELONGS_TO_TASK
+  - AFFILIATED_WITH
+metadata_fields:
+  - paper_id
+  - title
+  - authors
+  - abstract
+  - year
+  - categories
+  - source_url
+  - pdf_url
+  - keywords
+default_retrievers:
+  - bm25
+  - vector
+  - graph
+evaluation_metrics:
+  - citation_accuracy
+  - context_precision_proxy
+  - answer_relevancy_proxy
+  - faithfulness_proxy
